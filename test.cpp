@@ -32,7 +32,7 @@
 // plane index buffer generator
 std::vector<int> GeneratePlane(int n);
 
-int main(int argc, char **argv)
+int main(int , char **)
 {
 	// generate the plane
 	std::vector<int> pl = GeneratePlane(PLANE_SIZE);

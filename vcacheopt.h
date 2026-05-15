@@ -160,13 +160,13 @@ public:
 		return cache[which];
 	}
 
-	int GetCacheMissCount(int *inds, int tri_count)
+	int GetCacheMissCount(int * inputIndices, int tri_count)
 	{
 		Clear();
 
 		for (int i=0; i<3*tri_count; i++)
 		{
-			AddVertex(inds[i]);
+			AddVertex(inputIndices[i]);
 		}
 
 		return misses;
@@ -255,7 +255,7 @@ protected:
 		}
 
 		// calculate scores for all active triangles
-		float max_score;
+		float max_score{};
 		int max_score_tri = -1;
 		bool first_time = true;
 		for (int i=0; i<(int)tris.size(); i++)
@@ -297,7 +297,7 @@ protected:
 		return Success;
 	}
 
-	Result Init(int *inds, int tri_count, int vertex_count)
+	Result Init(int *inputIndices, int tri_count, int vertex_count)
 	{
 		// clear the draw list
 		draw_list.clear();
@@ -312,14 +312,14 @@ protected:
 			TriangleCacheData dat;
 			for (int j=0; j<3; j++)
 			{
-				dat.verts[j] = inds[i * 3 + j];
+				dat.verts[j] = inputIndices[i * 3 + j];
 			}
 			tris.push_back(dat);
 		}
 
 		// copy the indices
 		this->inds.clear();
-		for (int i=0; i<tri_count * 3; i++) this->inds.push_back(inds[i]);
+		for (int i=0; i<tri_count * 3; i++) this->inds.push_back(inputIndices[i]);
 
 		vertex_cache.Clear();
 		best_tri = -1;
@@ -435,7 +435,7 @@ protected:
 	{
 		// iterate through all the vertices of the cache
 		bool first_time = true;
-		float max_score;
+		float max_score{};
 		int max_score_tri = -1;
 		for (int i=0; i<32; i++)
 		{
@@ -506,18 +506,18 @@ public:
 	}
 	
 	// stores new indices in place
-	Result Optimize(int *inds, int tri_count)
+	Result Optimize(int *inputIndices, int tri_count)
 	{
 		// find vertex count
 		int max_vert = -1;
 		for (int i=0; i<tri_count * 3; i++)
 		{
-			if (inds[i] > max_vert) max_vert = inds[i];
+			if (inputIndices[i] > max_vert) max_vert = inputIndices[i];
 		}
 
 		if (max_vert == -1) return Fail_NoVerts;
 
-		Result res = Init(inds, tri_count, max_vert + 1);
+		Result res = Init(inputIndices, tri_count, max_vert + 1);
 		if (res) return res;
 
 		// iterate until Iterate returns false
@@ -526,9 +526,9 @@ public:
 		// rewrite optimized index list
 		for (int i=0; i<(int)draw_list.size(); i++)
 		{
-			inds[3 * i + 0] = tris[draw_list[i]].verts[0];
-			inds[3 * i + 1] = tris[draw_list[i]].verts[1];
-			inds[3 * i + 2] = tris[draw_list[i]].verts[2];
+			inputIndices[3 * i + 0] = tris[draw_list[i]].verts[0];
+			inputIndices[3 * i + 1] = tris[draw_list[i]].verts[1];
+			inputIndices[3 * i + 2] = tris[draw_list[i]].verts[2];
 		}
 
 		return Success;
