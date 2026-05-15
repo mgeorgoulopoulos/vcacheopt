@@ -20,7 +20,7 @@ There are 2 classes that you can use:
 
 This is the main class for optimizing indexed meshes. The index buffer to be optimized must be a int array holding 3*n indices, where n is the triangle count of the mesh. To optimize such a buffer do the following:
 
-```
+```cpp
 // create an optimizer object
 VertexCacheOptimizer vcache;
 
@@ -34,7 +34,7 @@ If the function returns Success (=zero), the optimization is complete and the re
 
 This class emulates a vertex cache with 40 positions. You can use it to evaluate your resulting optimized meshes to check if the new cache miss count is indeed lower than the previous one of the unoptimized mesh:
 
-```
+```cpp
 VertexCache cache;
 int miss_count = cache.GetCacheMissCount(index_buffer, n);
 ```
