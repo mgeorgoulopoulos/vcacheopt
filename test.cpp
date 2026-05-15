@@ -22,14 +22,12 @@
  */
 
 #include "vcacheopt.h"
+#include <chrono>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define PLANE_SIZE 100
 #define RANDOM_SWAPS 0
-
-// timer routine
-unsigned int GetMSec(void);
 
 // plane index buffer generator
 std::vector<int> GeneratePlane(int n);
@@ -51,9 +49,11 @@ int main(int argc, char **argv)
 
 	VertexCacheOptimizer vco;
 	printf("Optimizing ... \n");
-	unsigned int time = GetMSec();
+	const auto startTime = std::chrono::high_resolution_clock::now();
 	VertexCacheOptimizer::Result res = vco.Optimize(&pl[0], tri_count);
-	time = GetMSec() - time;
+	auto endTime = std::chrono::high_resolution_clock::now();
+	const std::chrono::duration<double, std::milli> duration = endTime - startTime;
+
 	if (res)
 	{
 		printf("Error\n");
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 	}
 
 	printf("Optimized in %f seconds (%d ns/triangle)\n",
-		time / 1000.0f, (time * 1000) / tri_count);
+		duration.count() / 1000.0f, (static_cast<int>(duration.count()) * 1000) / tri_count);
 
 	misses = vertex_cache.GetCacheMissCount(&pl[0], tri_count);
 
@@ -119,38 +119,3 @@ std::vector<int> GeneratePlane(int n)
  * Cross platform timer routines
  * Thanks to John Tsiombikas
  */
-
-#if defined(unix) || defined(__unix__)
-#include <time.h>
-#include <sys/time.h>
-
-unsigned int GetMSec(void)
-{
-	static struct timeval tv, first_tv;
-
-	gettimeofday(&tv, 0);
-
-	if(first_tv.tv_sec == 0 && first_tv.tv_usec == 0) {
-		first_tv = tv;
-		return 0;
-	}
-	return (tv.tv_sec - first_tv.tv_sec) * 1000 + (tv.tv_usec - first_tv.tv_usec) / 1000;
-}
-
-#elif defined(WIN32) || defined(__WIN32__)
-#include <windows.h>
-
-unsigned int GetMSec(void)
-{
-	static unsigned int first_time;
-
-	if(!first_time) {
-		first_time = timeGetTime();
-		return 0;
-	}
-	return timeGetTime() - first_time;
-}
-
-#else
-#error "unsupported platform, or detection failed"
-#endif
