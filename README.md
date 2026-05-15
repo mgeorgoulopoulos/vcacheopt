@@ -41,6 +41,20 @@ int miss_count = cache.GetCacheMissCount(index_buffer, n);
 
 You can do this before and after optimization to compare cache misses before and after.
 
+# Test output
+
+```
+Mesh triangle count: 19602
+*** Before optimization ***
+Cache misses    : 19800
+ACMR            : 1.010101
+Optimizing ...
+Optimized in 0.128177 seconds (6 ns/triangle)
+*** After optimization ***
+Cache misses    : 13271
+ACMR            : 0.677023
+```
+
 # Feedback 
 
 Feedback is most welcome at mgeorgoulopoulos at gmail.
