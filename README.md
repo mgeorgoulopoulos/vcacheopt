@@ -1,4 +1,8 @@
-vcacheopt - Vertex Cache Optimizer documentation
+**Archival Note:** This library was originally created in 2009 and hosted on [Google Code](https://code.google.com/archive/p/vcacne/). Following the shutdown of Google Code, the project has been migrated here to GitHub for preservation and updates.
+
+The link to the original paper by Tom Forsyth seems to not be active anymore. The paper can be accessed [here](https://tomforsyth1000.github.io/papers/fast_vert_cache_opt.html).
+
+# vcacheopt - Vertex Cache Optimizer documentation
 
 This library is an implementation of the "Linear-Speed Vertex Cache Optimisation" algorithm. You can find the algorithm description at:
 
@@ -8,28 +12,36 @@ The library consists of a single header file "vcacheopt.h" and is written in C++
 
 The code is tested with visual studio, but it must work with any c++ compiler.
 
+# How to use
+
 There are 2 classes that you can use:
 
-- class VertexCacheOptimizer:
+## class VertexCacheOptimizer:
 
 This is the main class for optimizing indexed meshes. The index buffer to be optimized must be a int array holding 3*n indices, where n is the triangle count of the mesh. To optimize such a buffer do the following:
 
+```
 // create an optimizer object
 VertexCacheOptimizer vcache;
 
 // perform optimization. n is the triangle count, *not* the index count
 VertexCacheOptimizer::Result r = vcache.Optimize(index_buffer, n);
+```
 
 If the function returns Success (=zero), the optimization is complete and the result is stored back in your buffer. If the function fails, it will return either Fail_BadIndex, which means that one or more of your indices is negative or Fail_NoVerts, which means that your index count is zero (no indices to optimize).
 
-- class VertexCache
+## class VertexCache
 
-This class emulates a vertex cache with 40 positions. You can use it to evaluate your resulting optimized meshes to check if the new cache miss count is indeed lower than the previews one of the unoptimized mesh:
+This class emulates a vertex cache with 40 positions. You can use it to evaluate your resulting optimized meshes to check if the new cache miss count is indeed lower than the previous one of the unoptimized mesh:
 
+```
 VertexCache cache;
 int miss_count = cache.GetCacheMissCount(index_buffer, n);
+```
 
 You can do this before and after optimization to compare cache misses before and after.
+
+# Feedback 
 
 Feedback is most welcome at <mgeorgoulopoulos at gmail>.
 
