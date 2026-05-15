@@ -43,7 +43,7 @@ You can do this before and after optimization to compare cache misses before and
 
 # Feedback 
 
-Feedback is most welcome at <mgeorgoulopoulos at gmail>.
+Feedback is most welcome at mgeorgoulopoulos at gmail.
 
 ---
 2009 Michael Georgoulopoulos
